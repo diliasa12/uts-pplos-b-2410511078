@@ -20,26 +20,13 @@ async function migrate() {
       email VARCHAR(150) NOT NULL UNIQUE,
       password_hash VARCHAR(255),
       oauth_provider VARCHAR(20),
+      oauth_provider_id VARCHAR(150),
       is_oauth_user BOOLEAN DEFAULT FALSE,
       profile_photo_url TEXT,
       role ENUM('user','admin') DEFAULT 'user',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
-      `);
-    await conn.query(`
-     CREATE TABLE IF NOT EXISTS oauth_accounts(
-     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-     user_id CHAR(36) NOT NULL,
-     provider VARCHAR(50) NOT NULL,
-     provider_user_id VARCHAR (150) NOT NULL,
-     provider_email VARCHAR(150),
-     provider_photo_url TEXT,
-     access_token TEXT,
-     token_expires_at TIMESTAMP,
-     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-     ) 
       `);
 
     await conn.query(`
