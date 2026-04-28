@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import RefreshToken from "../models/RefreshToken.js";
 import TokenBlacklist from "../models/TokenBlacklist.js";
@@ -20,7 +20,7 @@ export const register = catchAsync(async (req, res) => {
     throw new AppError("Email has been registered", 409);
   }
   const password_hash = await bcrypt.hash(password, 10);
-  await User.create({ name, email, password_hash });
+  await User.create({ name, email, password_hash, role });
   return res
     .status(201)
     .json({ success: true, message: "Registration success" });
@@ -112,7 +112,7 @@ export const logout = catchAsync(async (req, res) => {
   if (!decoded) {
     throw new AppError("Invalid Token", 401);
   }
-  const expires_at = new Date(deocode.exp * 1000);
+  const expires_at = new Date(decoded.exp * 1000);
   await TokenBlacklist.add({
     user_id: decoded.id,
     access_token: accessToken,
@@ -121,7 +121,7 @@ export const logout = catchAsync(async (req, res) => {
   if (refresh_token) {
     await RefreshToken.revoke(refresh_token);
   }
-  return res.status(200).json({ success: true, message: "Login Success" });
+  return res.status(200).json({ success: true, message: "Logout Success" });
 });
 
 export const me = catchAsync(async (req, res) => {

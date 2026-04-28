@@ -13,6 +13,16 @@ async function migrate() {
   await tempConnection.end();
   const conn = await pool.getConnection();
   try {
+    // matikan foreign key check dulu
+    await conn.query(`SET FOREIGN_KEY_CHECKS = 0`);
+
+    await conn.query(`DROP TABLE IF EXISTS oauth_accounts`);
+    await conn.query(`DROP TABLE IF EXISTS token_blacklist`);
+    await conn.query(`DROP TABLE IF EXISTS refresh_tokens`);
+    await conn.query(`DROP TABLE IF EXISTS users`);
+
+    await conn.query(`SET FOREIGN_KEY_CHECKS = 1`);
+
     await conn.query(`
       CREATE TABLE IF NOT EXISTS users(
       id CHAR(36) PRIMARY KEY DEFAULT (UUID()),

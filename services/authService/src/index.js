@@ -23,13 +23,5 @@ app.set("passport", passport);
 
 app.use("/auth", authRoutes);
 
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    service: "auth-service",
-    status: "running",
-    port: process.env.PORT,
-  });
-});
 app.use(errorHandler);
 app.listen(PORT, () => console.log(`http://localhost:${PORT}`));

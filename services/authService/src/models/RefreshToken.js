@@ -9,7 +9,7 @@ const RefreshToken = {
   },
   findByToken: async (token) => {
     const [rows] = await pool.query(
-      `SELECT * FROM refrsh_tokens WHERE token = ? AND is_revoked =FALSE AND expires_at > NOW()`,
+      `SELECT * FROM refresh_tokens WHERE token = ? AND is_revoked =FALSE AND expires_at > NOW()`,
       [token],
     );
     return rows[0];
