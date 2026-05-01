@@ -4,6 +4,7 @@ import errorHandler from "./middlewares/erroHandler.js";
 import session from "express-session";
 import passport from "./config/passport.js";
 import authRoutes from "./routes/authRoute.js";
+import gatewayOnly from "./middlewares/gatewayOnly.js";
 dotenv.config({
   path: "./.env",
 });
@@ -20,7 +21,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.set("passport", passport);
-
+app.use(gatewayOnly);
 app.use("/auth", authRoutes);
 
 app.use(errorHandler);

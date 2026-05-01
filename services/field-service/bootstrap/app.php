@@ -10,6 +10,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->prepend(\App\Http\Middleware\GatewayOnly::class);
         $middleware->alias([
             'jwt.verify' => \App\Http\Middleware\AuthMiddleware::class,
         ]);

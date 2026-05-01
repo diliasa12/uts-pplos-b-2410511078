@@ -2,12 +2,13 @@ import "dotenv/config";
 import express from "express";
 import bookingRoutes from "./routes/bookingRoute.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import gatewayOnly from "./middlewares/gatewayOnly.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(gatewayOnly);
 app.use("/bookings", bookingRoutes);
 
 app.use((req, res) => {

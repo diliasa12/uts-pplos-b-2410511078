@@ -1,8 +1,4 @@
-import jwt from "jsonwebtoken";
-import catchAsync from "../utils/catchAsync.js";
-import AppError from "../utils/AppError.js";
-
-const authMiddleware = catchAsync(async (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   const userId = req.headers["x-user-id"];
   const userRole = req.headers["x-user-role"];
   const userEmail = req.headers["x-user-email"];
@@ -21,6 +17,6 @@ const authMiddleware = catchAsync(async (req, res, next) => {
   };
 
   next();
-});
+};
 
 export default authMiddleware;
