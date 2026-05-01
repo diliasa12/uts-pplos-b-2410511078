@@ -11,12 +11,13 @@ import {
   getPayments,
 } from "../controllers/paymentController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-
+import authorize from "../middlewares/roleMiddleware.js";
 const router = Router();
 
 router.use(authMiddleware);
 
-router.get("/dashboard", getDashboard);
+router.get("/dashboard", authorize("admin"), getDashboard);
+
 router.get("/", getBookings);
 router.post("/", createBooking);
 router.get("/:id", getBookingById);
