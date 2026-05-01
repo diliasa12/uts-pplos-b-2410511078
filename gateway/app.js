@@ -23,16 +23,13 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json());
 
-// public routes yang tidak perlu JWT
+
 const publicPaths = [
   { method: "POST", path: "/service1/auth/register" },
   { method: "POST", path: "/service1/auth/login" },
   { method: "POST", path: "/service1/auth/refresh" },
   { method: "GET", path: "/service1/auth/oauth/google" },
   { method: "GET", path: "/service1/auth/oauth/google/callback" },
-  { method: "GET", path: "/service1/health" },
-  { method: "GET", path: "/service2/health" },
-  { method: "GET", path: "/service3/health" },
   { method: "GET", path: "/service2/fields" },
   { method: "GET", path: "/service2/categories" },
 ];
