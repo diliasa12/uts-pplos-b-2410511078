@@ -4,7 +4,7 @@ import BookingLog from "../models/BookingLog.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/AppError.js";
 import { randomUUID } from "crypto";
-
+import "dotenv/config";
 export const getBookings = catchAsync(async (req, res) => {
   const { page = 1, per_page = 10, status, field_id } = req.query;
   const user_id = req.user.role === "admin" ? req.query.user_id : req.user.id;
@@ -65,13 +65,20 @@ export const createBooking = catchAsync(async (req, res) => {
   const existing = await Booking.findBySlotId(slot_id);
   if (existing) throw new AppError("Slot already booked", 409);
   const booking_id = randomUUID();
+  const lockUrl = `${process.env.FIELD_SERVICE_URL}/slots/${slot_id}/lock`;
+  console.log("[Booking] Lock URL:", lockUrl);
+  console.log("[Booking] Gateway Secret:", process.env.GATEWAY_SECRET);
+
   const lockRes = await fetch(
     `${process.env.FIELD_SERVICE_URL}/slots/${slot_id}/lock`,
     {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: req.headers["authorization"],
+        "x-user-id": req.user.id,
+        "x-user-role": req.user.role,
+        "x-user-email": req.user.email,
+        "x-gateway-secret": process.env.GATEWAY_SECRET,
       },
       body: JSON.stringify({ booking_id: booking_id }),
     },
@@ -109,7 +116,10 @@ export const createBooking = catchAsync(async (req, res) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization: req.headers["authorization"],
+      "x-user-id": req.user.id,
+      "x-user-role": req.user.role,
+      "x-user-email": req.user.email,
+      "x-gateway-secret": process.env.GATEWAY_SECRET,
     },
     body: JSON.stringify({ booking_id: booking.id }),
   });
@@ -143,7 +153,12 @@ export const cancelBooking = catchAsync(async (req, res) => {
     `${process.env.FIELD_SERVICE_URL}/slots/${booking.slot_id}/release`,
     {
       method: "PATCH",
-      headers: { Authorization: req.headers["authorization"] },
+      headers: {
+        "x-user-id": req.user.id,
+        "x-user-role": req.user.role,
+        "x-user-email": req.user.email,
+        "x-gateway-secret": process.env.GATEWAY_SECRET,
+      },
     },
   );
 
