@@ -1,27 +1,18 @@
 import mysql from "mysql2/promise";
 import "dotenv/config";
-
+import pool from "./db.js";
 async function migrate() {
-  const tempConn = await mysql.createConnection({
+  const tempConnection = await mysql.createConnection({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
   });
+  await tempConnection.query(`
+    CREATE DATABASE IF NOT EXISTS \`${process.env.DB_DATABASE}\``);
+  await tempConnection.end();
 
-  await tempConn.query(
-    `CREATE DATABASE IF NOT EXISTS \`${process.env.DATABASE}\``,
-  );
-  console.log(`Database ${process.env.DATABASE} ready`);
-  await tempConn.end();
-
-  const conn = await mysql.createConnection({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-  });
+  const conn = await pool.getConnection();
 
   try {
     await conn.query(`
@@ -71,7 +62,7 @@ async function migrate() {
   } catch (err) {
     console.log("Migration failed:", err);
   } finally {
-    await conn.end();
+    await conn.release();
     process.exit();
   }
 }
