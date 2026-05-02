@@ -1,0 +1,2409 @@
+{
+  "info": {
+    "name": "UTS PPLOS B - 2410511078",
+    "description": "Sistem Booking Lapangan Olahraga\nAuth Service: http://localhost:3001\nField Service: http://localhost:3002\nGateway: http://localhost:3000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "auth_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "field_url",
+      "value": "http://localhost:3002/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "category_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "field_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "slot_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "booking_url",
+      "value": "http://localhost:3003",
+      "type": "string"
+    },
+    {
+      "key": "booking_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "payment_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "Register",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                      "pm.test(\"Register success\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"user\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/register",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "register"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Register - Admin",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\",\n  \"role\": \"admin\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/register",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "register"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Got tokens\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.data).to.have.property(\"access_token\");",
+                      "  pm.expect(json.data).to.have.property(\"refresh_token\");",
+                      "  pm.collectionVariables.set(\"access_token\", json.data.access_token);",
+                      "  pm.collectionVariables.set(\"refresh_token\", json.data.refresh_token);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/login",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Login - Admin",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Got admin tokens\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.collectionVariables.set(\"access_token\", json.data.access_token);",
+                      "  pm.collectionVariables.set(\"refresh_token\", json.data.refresh_token);",
+                      "  console.log(\"Admin token saved\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/login",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Login as admin. Run this before accessing admin-only endpoints."
+              }
+            },
+            {
+              "name": "Me (Profile)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has user data\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.data).to.have.property(\"id\");",
+                      "  pm.expect(json.data).to.have.property(\"email\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/me",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "me"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Refresh Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Got new tokens\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.collectionVariables.set(\"access_token\", json.data.access_token);",
+                      "  pm.collectionVariables.set(\"refresh_token\", json.data.refresh_token);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/refresh",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "refresh"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Logout",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set(\"access_token\", \"\");",
+                      "pm.collectionVariables.set(\"refresh_token\", \"\");"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/logout",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Validate Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Token valid\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "  pm.expect(json.message).to.eql(\"Token is valid\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/validate-token",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "validate-token"
+                  ]
+                },
+                "description": "Used internally by gateway to check blacklist. Can also be used to verify token is still valid."
+              }
+            }
+          ]
+        },
+        {
+          "name": "OAuth",
+          "item": [
+            {
+              "name": "Google Login Redirect",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/oauth/google",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "oauth",
+                    "google"
+                  ]
+                },
+                "description": "Open in browser, not Postman. Will redirect to Google login page."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Error Cases",
+          "item": [
+            {
+              "name": "Register - Missing Field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                      "pm.test(\"Has error\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(false);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"johndoe@example.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/register",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "register"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Register - Email Duplicate",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 409\", () => pm.response.to.have.status(409));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/register",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "register"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Login - Wrong Password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/login",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Me - No Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/me",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "me"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Me - Invalid Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer invalidtoken"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/me",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "me"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Me - Blacklisted Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                      "pm.test(\"Token revoked\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(false);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service1/auth/me",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service1",
+                    "auth",
+                    "me"
+                  ]
+                },
+                "description": "Run this after logout to test blacklisted token rejection."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Field Service",
+      "item": [
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "Get All Categories",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has data\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "  pm.expect(json.data).to.be.an(\"array\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/categories",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "categories"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Category by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/categories/{{category_id}}",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "categories",
+                    "{{category_id}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                      "pm.test(\"Category created\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "  pm.collectionVariables.set(\"category_id\", json.data.id);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Futsal\",\n  \"description\": \"Indoor futsal field\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/categories",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "categories"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Futsal\",\n  \"description\": \"Indoor futsal field - updated\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/categories/{{category_id}}",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "categories",
+                    "{{category_id}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/categories/{{category_id}}",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "categories",
+                    "{{category_id}}"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fields",
+          "item": [
+            {
+              "name": "Get All Fields",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has pagination\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json).to.have.property(\"meta\");",
+                      "  pm.expect(json.meta).to.have.property(\"total\");",
+                      "  pm.expect(json.meta).to.have.property(\"current_page\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields?page=1&per_page=10",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Fields - With Filter",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields?status=active&min_price=50000&max_price=200000&per_page=5",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "active"
+                    },
+                    {
+                      "key": "min_price",
+                      "value": "50000"
+                    },
+                    {
+                      "key": "max_price",
+                      "value": "200000"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "5"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Field by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has field data\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.data).to.have.property(\"id\");",
+                      "  pm.expect(json.data).to.have.property(\"category\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/{{field_id}}",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "{{field_id}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                      "pm.test(\"Field created\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "  pm.collectionVariables.set(\"field_id\", json.data.id);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"category_id\": \"{{category_id}}\",\n  \"name\": \"Lapangan Futsal A\",\n  \"description\": \"Indoor futsal field with good lighting\",\n  \"location\": \"Jakarta Selatan\",\n  \"price_per_hour\": 100000,\n  \"status\": \"active\",\n  \"images\": [\n    {\n      \"image_url\": \"https://example.com/image1.jpg\",\n      \"is_primary\": true\n    }\n  ],\n  \"schedules\": [\n    {\n      \"day_of_week\": 1,\n      \"open_time\": \"08:00\",\n      \"close_time\": \"22:00\",\n      \"is_open\": true\n    }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update Field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Lapangan Futsal A - Updated\",\n  \"price_per_hour\": 120000\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/{{field_id}}",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "{{field_id}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete Field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/{{field_id}}",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "{{field_id}}"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Slots",
+          "item": [
+            {
+              "name": "Get Slots by Field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has pagination\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json).to.have.property(\"meta\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/{{field_id}}/slots?per_page=10",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "{{field_id}}",
+                    "slots"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Slots - Filter by Date",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/{{field_id}}/slots?date=2026-05-10&status=available",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "{{field_id}}",
+                    "slots"
+                  ],
+                  "query": [
+                    {
+                      "key": "date",
+                      "value": "2026-05-10"
+                    },
+                    {
+                      "key": "status",
+                      "value": "available"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Slot",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                      "pm.test(\"Slot created\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "  pm.collectionVariables.set(\"slot_id\", json.data.id);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"date\": \"2026-05-10\",\n  \"start_time\": \"08:00\",\n  \"end_time\": \"09:00\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/{{field_id}}/slots",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "{{field_id}}",
+                    "slots"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Release Slot",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Slot released\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.data.status).to.eql(\"available\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/slots/{{slot_id}}/release",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "slots",
+                    "{{slot_id}}",
+                    "release"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Error Cases",
+          "item": [
+            {
+              "name": "Get Field - Not Found",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/invalid-uuid",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "invalid-uuid"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Field - No Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Test Field\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Field - Validation Error",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 422\", () => pm.response.to.have.status(422));",
+                      "pm.test(\"Has errors\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json).to.have.property(\"errors\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Test Field\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Slot - Conflict",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 409\", () => pm.response.to.have.status(409));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"date\": \"2026-05-10\",\n  \"start_time\": \"08:00\",\n  \"end_time\": \"09:00\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service2/fields/{{field_id}}/slots",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service2",
+                    "fields",
+                    "{{field_id}}",
+                    "slots"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Booking Service",
+      "item": [
+        {
+          "name": "Bookings",
+          "item": [
+            {
+              "name": "Get All Bookings",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has pagination\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json).to.have.property(\"meta\");",
+                      "  pm.expect(json.meta).to.have.property(\"total\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings?page=1&per_page=10",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Bookings - Filter by Status",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings?status=pending&per_page=5",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "pending"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "5"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Booking",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                      "pm.test(\"Booking created\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "  pm.collectionVariables.set(\"booking_id\", json.data.id);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"field_id\": \"{{field_id}}\",\n  \"slot_id\": \"{{slot_id}}\",\n  \"date\": \"2026-05-10\",\n  \"start_time\": \"08:00\",\n  \"end_time\": \"09:00\",\n  \"total_price\": 100000\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Booking by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has payments and logs\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.data).to.have.property(\"payments\");",
+                      "  pm.expect(json.data).to.have.property(\"logs\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/{{booking_id}}",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "{{booking_id}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Cancel Booking",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Booking cancelled\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Changed plans\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/{{booking_id}}/cancel",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "{{booking_id}}",
+                    "cancel"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Dashboard (Admin Only)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has dashboard data\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.data).to.have.property(\"total_bookings\");",
+                      "  pm.expect(json.data).to.have.property(\"total_revenue\");",
+                      "  pm.expect(json.data).to.have.property(\"by_status\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/dashboard",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "dashboard"
+                  ]
+                },
+                "description": "Login as admin first before running this."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            {
+              "name": "Get Payments by Booking",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                      "pm.test(\"Has payments array\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.data).to.be.an(\"array\");",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/{{booking_id}}/payments",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "{{booking_id}}",
+                    "payments"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Pay DP",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                      "pm.test(\"Payment recorded\", () => {",
+                      "  const json = pm.response.json();",
+                      "  pm.expect(json.success).to.eql(true);",
+                      "  pm.collectionVariables.set(\"payment_id\", json.data.id);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"dp\",\n  \"amount\": 50000,\n  \"payment_method\": \"bank_transfer\",\n  \"proof_url\": \"https://example.com/proof.jpg\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/{{booking_id}}/payments",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "{{booking_id}}",
+                    "payments"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Pay Full",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201\", () => pm.response.to.have.status(201));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"full\",\n  \"amount\": 100000,\n  \"payment_method\": \"bank_transfer\",\n  \"proof_url\": \"https://example.com/proof2.jpg\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/{{booking_id}}/payments",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "{{booking_id}}",
+                    "payments"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Error Cases",
+          "item": [
+            {
+              "name": "Get Bookings - No Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Booking - Missing Fields",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"field_id\": \"{{field_id}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Booking - Slot Already Booked",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 409\", () => pm.response.to.have.status(409));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"field_id\": \"{{field_id}}\",\n  \"slot_id\": \"{{slot_id}}\",\n  \"date\": \"2026-05-10\",\n  \"start_time\": \"08:00\",\n  \"end_time\": \"09:00\",\n  \"total_price\": 100000\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Booking - Not Found",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/invalid-id",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "invalid-id"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Dashboard - Non Admin",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 403\", () => pm.response.to.have.status(403));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/dashboard",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "dashboard"
+                  ]
+                },
+                "description": "Login as regular user first before running this."
+              }
+            },
+            {
+              "name": "Pay DP - Already Paid",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 409\", () => pm.response.to.have.status(409));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"dp\",\n  \"amount\": 50000,\n  \"payment_method\": \"bank_transfer\"\n}"
+                },
+                "url": {
+                  "raw": "{{gateway_url}}/service3/bookings/{{booking_id}}/payments",
+                  "host": [
+                    "{{gateway_url}}"
+                  ],
+                  "path": [
+                    "service3",
+                    "bookings",
+                    "{{booking_id}}",
+                    "payments"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Direct Access (Forbidden)",
+      "item": [
+        {
+          "name": "Auth - Direct Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"Has error message\", () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.eql(false);",
+                  "  pm.expect(json.message).to.eql(\"Direct access not allowed\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/auth/register",
+              "host": [
+                "{{auth_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Should return 403 - direct access without gateway secret is blocked"
+          }
+        },
+        {
+          "name": "Auth - Direct Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/auth/login",
+              "host": [
+                "{{auth_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Should return 403 - direct access without gateway secret is blocked"
+          }
+        },
+        {
+          "name": "Auth - Direct Me",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{auth_url}}/auth/me",
+              "host": [
+                "{{auth_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Should return 403 even with valid token"
+          }
+        },
+        {
+          "name": "Field - Direct Get Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"Has error message\", () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.eql(false);",
+                  "  pm.expect(json.message).to.eql(\"Direct access not allowed\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{field_url}}/fields",
+              "host": [
+                "{{field_url}}"
+              ],
+              "path": [
+                "fields"
+              ]
+            },
+            "description": "Should return 403 - direct access without gateway secret is blocked"
+          }
+        },
+        {
+          "name": "Field - Direct Get Categories",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{field_url}}/categories",
+              "host": [
+                "{{field_url}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            },
+            "description": "Should return 403 - direct access without gateway secret is blocked"
+          }
+        },
+        {
+          "name": "Field - Direct Create Field",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Field\"\n}"
+            },
+            "url": {
+              "raw": "{{field_url}}/fields",
+              "host": [
+                "{{field_url}}"
+              ],
+              "path": [
+                "fields"
+              ]
+            },
+            "description": "Should return 403 even with valid token"
+          }
+        },
+        {
+          "name": "Booking - Direct Get Bookings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"Has error message\", () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.eql(false);",
+                  "  pm.expect(json.message).to.eql(\"Direct access not allowed\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{booking_url}}/bookings",
+              "host": [
+                "{{booking_url}}"
+              ],
+              "path": [
+                "bookings"
+              ]
+            },
+            "description": "Should return 403 - direct access without gateway secret is blocked"
+          }
+        },
+        {
+          "name": "Booking - Direct Create Booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"field_id\": \"{{field_id}}\",\n  \"slot_id\": \"{{slot_id}}\",\n  \"date\": \"2026-05-10\",\n  \"start_time\": \"08:00\",\n  \"end_time\": \"09:00\",\n  \"total_price\": 100000\n}"
+            },
+            "url": {
+              "raw": "{{booking_url}}/bookings",
+              "host": [
+                "{{booking_url}}"
+              ],
+              "path": [
+                "bookings"
+              ]
+            },
+            "description": "Should return 403 even with valid token and body"
+          }
+        },
+        {
+          "name": "Booking - Direct Dashboard",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 - Direct access blocked\", () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{booking_url}}/bookings/dashboard",
+              "host": [
+                "{{booking_url}}"
+              ],
+              "path": [
+                "bookings",
+                "dashboard"
+              ]
+            },
+            "description": "Should return 403 even with admin token"
+          }
+        }
+      ]
+    }
+  ]
+}
