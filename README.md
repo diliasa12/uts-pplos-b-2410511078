@@ -51,22 +51,22 @@ Copy `.env.example` ke `.env` di setiap folder:
 
 ```bash
 cp gateway/.env.example gateway/.env
-cp services/auth-service/.env.example services/auth-service/.env
+cp services/authService/.env.example services/authService/.env
 cp services/field-service/.env.example services/field-service/.env
-cp services/booking-service/.env.example services/booking-service/.env
+cp services/bookingService/.env.example services/bookingService/.env
 ```
 
 Isi nilai berikut di setiap `.env`:
 
 ```env
 # Wajib sama di semua service
-JWT_SECRET=your_jwt_secret
+SECRET_KEY=your_jwt_secret
 GATEWAY_SECRET=your_gateway_secret
 
 # Google OAuth (auth-service)
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=http://localhost:3001/auth/oauth/google/callback
+GOOGLE_CALLBACK_URL=http://localhost:3000/auth/oauth/google/callback
 ```
 
 ### 3. Auth Service
