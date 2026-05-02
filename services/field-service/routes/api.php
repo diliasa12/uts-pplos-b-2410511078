@@ -33,10 +33,9 @@ Route::middleware('jwt.verify')->group(function () {
       Route::delete('/{id}', [FieldController::class, 'destroy']);
       Route::post('/{field_id}/slots', [FieldSlotController::class, 'store']);
     });
-
-    Route::prefix('slots')->group(function () {
-      Route::patch('/{id}/lock', [FieldSlotController::class, 'lock']);
-      Route::patch('/{id}/release', [FieldSlotController::class, 'release']);
-    });
+  });
+  Route::prefix('slots')->group(function () {
+    Route::patch('/{id}/lock', [FieldSlotController::class, 'lock']);
+    Route::patch('/{id}/release', [FieldSlotController::class, 'release']);
   });
 });
